@@ -1,8 +1,16 @@
 const btnContainer = document.getElementById('btn-container');
 const cardContainer = document.getElementById('card-container');
 const errorElement = document.getElementById('error-element');
+const sortBtn = document.getElementById('sort-btn');
 
 let selectedCategory = 1000;
+let sortByView = false;
+
+sortBtn.addEventListener('click', () => {
+    sortByView = true;
+    fetchDataByCatagories(selectedCategory,sortByView) 
+    
+})
 
 const fetchCatagories = () => {
     const url = 'https://openapi.programming-hero.com/api/videos/categories'
@@ -17,8 +25,8 @@ const fetchCatagories = () => {
                 newBtn.innerText = card.category;
                 newBtn.addEventListener('click', () => {
                     fetchDataByCatagories(card.category_id)
-                    const allBtns = document. querySelectorAll('.category-btn')
-                    for(const btn of allBtns){
+                    const allBtns = document.querySelectorAll('.category-btn')
+                    for (const btn of allBtns) {
                         btn.classList.remove('bg-red-600')
                     }
                     newBtn.classList.add('bg-red-600')
@@ -29,12 +37,23 @@ const fetchCatagories = () => {
 }
 
 
-const fetchDataByCatagories = (catagoriesID) => {
+const fetchDataByCatagories = (catagoriesID , sortByView) => {
     selectedCategory = catagoriesID;
     const url = `https://openapi.programming-hero.com/api/videos/category/${catagoriesID}`
     fetch(url)
         .then((res) => res.json())
-        .then(({ data }) => {  
+        .then(({ data }) => {
+
+            if(sortByView){
+                data.sort((a,b) => {
+                    const totalViewStrFirst = a.others?.views;
+                    const totalViewStrSecond = b.others?.views;
+                    const totalViewFirstNumber = parseFloat(totalViewStrFirst.replace("K", '')) || 0;
+                    const totalViewSecondNumber = parseFloat(totalViewStrSecond.replace("K", '')) || 0;
+
+                    return totalViewSecondNumber - totalViewFirstNumber ;
+                })
+            }
 
             if (data.length === 0) {
                 errorElement.classList.remove('hidden')
@@ -81,4 +100,4 @@ const fetchDataByCatagories = (catagoriesID) => {
 }
 
 fetchCatagories();
-fetchDataByCatagories(selectedCategory);
+fetchDataByCatagories(selectedCategory ,sortByView);
