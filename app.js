@@ -11,7 +11,7 @@ const fetchCatagories = () =>{
             const newBtn = document.createElement('button');
             newBtn.classList = 'btn btn-ghost bg-slate-500 text-white text-lg'
             newBtn.innerText = card.category;
-            newBtn.addEventListener('click', () => fetchDataByCatagories())
+            newBtn.addEventListener('click', () => fetchDataByCatagories(card.category_id))
             btnContainer.appendChild(newBtn)
         })
     })
