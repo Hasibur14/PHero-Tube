@@ -13,9 +13,16 @@ const fetchCatagories = () => {
                 // console.log(card)
 
                 const newBtn = document.createElement('button');
-                newBtn.classList = 'btn btn-ghost bg-slate-500 text-white text-lg'
+                newBtn.classList = 'category-btn btn btn-ghost bg-slate-500 text-white text-lg'
                 newBtn.innerText = card.category;
-                newBtn.addEventListener('click', () => fetchDataByCatagories(card.category_id))
+                newBtn.addEventListener('click', () => {
+                    fetchDataByCatagories(card.category_id)
+                    const allBtns = document. querySelectorAll('.category-btn')
+                    for(const btn of allBtns){
+                        btn.classList.remove('bg-red-600')
+                    }
+                    newBtn.classList.add('bg-red-600')
+                })
                 btnContainer.appendChild(newBtn)
             })
         })
@@ -27,7 +34,7 @@ const fetchDataByCatagories = (catagoriesID) => {
     const url = `https://openapi.programming-hero.com/api/videos/category/${catagoriesID}`
     fetch(url)
         .then((res) => res.json())
-        .then(({ data }) => {
+        .then(({ data }) => {  
 
             if (data.length === 0) {
                 errorElement.classList.remove('hidden')
